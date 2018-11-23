@@ -23,7 +23,7 @@
                 >Novo Jogo
                 </v-btn>
 
-                <v-layout row wrap v-if="novoJogo.timeDaCasa.time || novoJogo.timeDeFora.time">
+                <v-layout row wrap v-if="visao !='tabela'">
                     <v-flex xs12 sm6 md3>
                         <v-text-field
                                 label="Time da Casa"
@@ -32,7 +32,7 @@
                         ></v-text-field>
                     </v-flex>
 
-                    <div class="" v-if="novoJogo.timeDaCasa.time || novoJogo.timeDeFora.time">
+                    <div>
                         <img :src="novoJogo.timeDaCasa.time ? novoJogo.timeDaCasa.time.escudo : novoJogo.timeDaCasa.escudo"
                              class="escudo"> X
                         <img :src="novoJogo.timeDeFora.time ? novoJogo.timeDeFora.time.escudo : novoJogo.timeDeFora.escudo"
@@ -51,29 +51,31 @@
                     </v-btn>
                 </v-layout>
 
-                <v-data-table
-                        :headers="headers"
-                        :items="times"
-                        :search="search"
-                        :pagination.sync="pagination"
-                        class="elevation-1"
-                >
-                    <template slot="items" slot-scope="props">
-                        <td class="text-xs-center">
-                            <v-tooltip right>
-                                <img :src="props.item.escudo" slot="activator" class="escudo">
-                                <span>{{ props.item.nome }}</span>
-                            </v-tooltip>
-                        </td>
+                <div v-if="visao === 'tabela'">
+                    <v-data-table
+                            :headers="headers"
+                            :items="times"
+                            :search="search"
+                            :pagination.sync="pagination"
+                            class="elevation-1"
+                    >
+                        <template slot="items" slot-scope="props">
+                            <td class="text-xs-center">
+                                <v-tooltip right>
+                                    <img :src="props.item.escudo" slot="activator" class="escudo">
+                                    <span>{{ props.item.nome }}</span>
+                                </v-tooltip>
+                            </td>
 
-                        <td class="text-xs-center">{{ props.item.pontos }}</td>
-                        <td class="text-xs-center">{{ props.item.golsMarcados }}</td>
-                        <td class="text-xs-center">{{ props.item.golsSofridos }}</td>
-                        <td class="text-xs-center">{{ }}</td>
-                    </template>
-                </v-data-table>
-                <div class="text-xs-center pt-2">
-                    <v-pagination v-model="pagination.page" :length="pages"></v-pagination>
+                            <td class="text-xs-center">{{ props.item.pontos }}</td>
+                            <td class="text-xs-center">{{ props.item.golsMarcados }}</td>
+                            <td class="text-xs-center">{{ props.item.golsSofridos }}</td>
+                            <td class="text-xs-center">{{ }}</td>
+                        </template>
+                    </v-data-table>
+                    <div class="text-xs-center pt-2">
+                        <v-pagination v-model="pagination.page" :length="pages"></v-pagination>
+                    </div>
                 </div>
             </v-container>
         </v-content>
@@ -97,6 +99,7 @@
             if (this.foiEmpate(golsMarcados, golsSofridos)) {
                 this.empate(golsMarcados, golsSofridos);
                 timeVisitante.empate(golsMarcados, golsSofridos);
+                return;
             }
             if (this.foiVitoria(golsMarcados, golsSofridos)) {
                 this.vitoria(golsMarcados, golsSofridos);
@@ -184,6 +187,7 @@
                     { text: 'GS', value: 'carbs', align: 'center' },
                     { text: 'Saldo', value: 'protein', align: 'center' },
                 ],
+                visao: 'tabela',
             }
         },
         computed: {
@@ -209,6 +213,7 @@
                 this.novoJogo.timeDeFora.time = this.times[indiceDeFora];
                 this.novoJogo.timeDeFora.gols = 0;
 
+                this.visao = 'placar';
                 console.log(this.novoJogo);
             },
             fimJogo() {
@@ -217,6 +222,8 @@
                 var timeAdversario = this.novoJogo.timeDeFora.time;
                 var timeCasa = this.novoJogo.timeDaCasa.time;
                 timeCasa.fimJogo(timeAdversario, golsMaracados, golsSofridos);
+
+                this.visao = 'tabela';
             }
         },
     });
