@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Campeonato Brasileiro 2018</title>
+    <link href='https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons' rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+</head>
+<body>
+    <div id="app">
+    <v-form>
+        <v-container>
+            <h1 class="center"> Campeonato Brasileiro - 2018</h1>
+            <v-layout row wrap>
+                <v-flex xs12 sm6 md3>
+                    <v-text-field
+                            label="valor 1"
+                            v-model="values"
+                            outline
+                    ></v-text-field>
+                </v-flex>
+
+                <v-flex xs12 sm6 md3>
+                    <v-text-field
+                            label="valor 2"
+                            v-model="values2"
+                            outline
+                    ></v-text-field>
+                </v-flex>
+
+                <v-flex xs12 sm6 md3>
+                    <v-text-field
+                            label="Resposta do valor"
+                            :value="parseInt(values) * (parseInt(values2) / 100)"
+                            outline
+                    ></v-text-field>
+                </v-flex>
+            </v-layout>
+        </v-container>
+    </v-form>
+    </div>
+    <!--<input type="text" v-model="values">-->
+    <!--<input type="text" v-model="values2">-->
+
+
+<!-- development version, includes helpful console warnings -->
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                values: 0,
+                values2: 0
+            }
+        }
+    });
+</script>
+</body>
+</html>

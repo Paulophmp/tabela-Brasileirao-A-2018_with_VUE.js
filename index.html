@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Campeonato Brasileiro - 2018</title>
+    <link href='https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons' rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+    <style type="text/css">
+        .escudo {
+            width: 40px;
+            height: 40px;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <v-app>
+        <v-content>
+            <v-container>
+                <v-btn depressed small left color="primary"
+                       @click="criarNovoJogo()"
+                >Novo Jogo
+                </v-btn>
+
+                <v-layout row wrap v-if="novoJogo.timeDaCasa.time || novoJogo.timeDeFora.time">
+                    <v-flex xs12 sm6 md3>
+                        <v-text-field
+                                label="Time da Casa"
+                                v-model="novoJogo.timeDaCasa.gols"
+                                outline
+                        ></v-text-field>
+                    </v-flex>
+
+                    <div class="" v-if="novoJogo.timeDaCasa.time || novoJogo.timeDeFora.time">
+                        <img :src="novoJogo.timeDaCasa.time ? novoJogo.timeDaCasa.time.escudo : novoJogo.timeDaCasa.escudo"
+                             class="escudo"> X
+                        <img :src="novoJogo.timeDeFora.time ? novoJogo.timeDeFora.time.escudo : novoJogo.timeDeFora.escudo"
+                             class="escudo">
+                    </div>
+                    <v-flex xs12 sm6 md3>
+                        <v-text-field
+                                label="Time de Fora"
+                                v-model="novoJogo.timeDeFora.gols"
+                                outline
+                        ></v-text-field>
+                    </v-flex>
+                    <v-btn depressed small left color="error"
+                           @click="fimJogo()"
+                    >Fim de Jogo
+                    </v-btn>
+                </v-layout>
+
+                <v-data-table
+                        :headers="headers"
+                        :items="times"
+                        :search="search"
+                        :pagination.sync="pagination"
+                        class="elevation-1"
+                >
+                    <template slot="items" slot-scope="props">
+                        <td class="text-xs-center">
+                            <v-tooltip right>
+                                <img :src="props.item.escudo" slot="activator" class="escudo">
+                                <span>{{ props.item.nome }}</span>
+                            </v-tooltip>
+                        </td>
+
+                        <td class="text-xs-center">{{ props.item.pontos }}</td>
+                        <td class="text-xs-center">{{ props.item.golsMarcados }}</td>
+                        <td class="text-xs-center">{{ props.item.golsSofridos }}</td>
+                        <td class="text-xs-center">{{ }}</td>
+                    </template>
+                </v-data-table>
+                <div class="text-xs-center pt-2">
+                    <v-pagination v-model="pagination.page" :length="pages"></v-pagination>
+                </div>
+            </v-container>
+        </v-content>
+    </v-app>
+
+</div>
+<!--<input type="text" v-model="values">-->
+<!--<input type="text" v-model="values2">-->
+
+
+<!-- development version, includes helpful console warnings -->
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.js"></script>
+<script>
+    class Time {
+        constructor(nome, escudo) {
+            this.nome = nome;
+            this.escudo = escudo;
+
+            this.pontos = 0,
+                this.golsMarcados = 0,
+                this.golsSofridos = 0
+        }
+
+        fimJogo(timeVisitante, golsMarcados, golsSofridos) {
+            if (this.foiEmpate(golsMarcados, golsSofridos)) {
+                this.empate(golsMarcados, golsSofridos);
+                timeVisitante.empate(golsMarcados, golsSofridos);
+            }
+            if (this.foiVitoria(golsMarcados, golsSofridos)) {
+                this.vitoria(golsMarcados, golsSofridos);
+                timeVisitante.derrota(golsSofridos, golsMarcados);
+            } else {
+                this.derrota(golsMarcados, golsSofridos);
+                timeVisitante.vitoria(golsSofridos, golsMarcados);
+            }
+        }
+
+        foiEmpate(golsMarcados, golsSofridos) {
+            return golsMarcados === golsSofridos;
+        }
+
+        foiVitoria(golsMarcados, golsSofridos) {
+            return golsMarcados > golsSofridos
+        }
+
+        atualizarInformacoes(pontos, golsMarcados, golsSofridos) {
+            this.pontos += pontos;
+            this.golsMarcados += golsMarcados;
+            this.golsSofridos += golsSofridos;
+        }
+
+        empate(golsMarcados, golsSofridos) {
+            this.atualizarInformacoes(1, golsMarcados, golsSofridos);
+        }
+
+        vitoria(golsMarcados, golsSofridos) {
+            this.atualizarInformacoes(3, golsMarcados, golsSofridos);
+        }
+
+        derrota(golsMarcados, golsSofridos) {
+            this.atualizarInformacoes(0, golsMarcados, golsSofridos)
+        }
+    }
+
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                search: '',
+                pagination: {},
+                selected: [],
+                times: [
+                    new Time('palmeiras', 'assets/palmeiras_60x60.png'),
+                    new Time('Internacional', 'assets/internacional_60x60.png'),
+                    new Time('Flamengo', 'assets/flamengo_60x60.png'),
+                    new Time('Atlético-MG', 'assets/atletico_mg_60x60.png'),
+                    new Time('Santos', 'assets/santos_60x60.png'),
+                    new Time('Botafogo', 'assets/botafogo_60x60.png'),
+                    new Time('Atlético-PR', 'assets/atletico-pr_60x60.png'),
+                    new Time('Corinthians', 'assets/corinthians_60x60.png'),
+                    new Time('Grêmio', 'assets/gremio_60x60.png'),
+                    new Time('Fluminense', 'assets/fluminense_60x60.png'),
+                    new Time('Bahia', 'assets/bahia_60x60.png'),
+                    new Time('Chapecoense', 'assets/chapecoense_60x60.png'),
+                    new Time('São Paulo', 'assets/sao_paulo_60x60.png'),
+                    new Time('Cruzeiro', 'assets/cruzeiro_60x60.png'),
+                    new Time('Sport', 'assets/sport_60x60.png'),
+                    new Time('Ceará', 'assets/ceara_60x60.png'),
+                    new Time('Vitória', 'assets/vitoria_60x60.png'),
+                    new Time('Vasco', 'assets/vasco_60x60.png'),
+                    new Time('América-MG', 'assets/america_mg_60x60.png'),
+                    new Time('Paraná', 'assets/parana_60x60.png'),
+                ],
+                novoJogo: {
+                    timeDaCasa: {
+                        time: null,
+                        gols: 0,
+                    },
+                    timeDeFora: {
+                        time: null,
+                        gols: 0,
+                    }
+                },
+                headers: [
+                    {
+                        text: 'TIMES',
+                        align: 'left',
+                        value: 'name'
+                    },
+                    { text: 'Pontos', value: 'calories', align: 'center' },
+                    { text: 'GM', value: 'fat', align: 'center' },
+                    { text: 'GS', value: 'carbs', align: 'center' },
+                    { text: 'Saldo', value: 'protein', align: 'center' },
+                ],
+            }
+        },
+        computed: {
+            pages() {
+                if (this.pagination.rowsPerPage == null ||
+                    this.pagination.totalItems == null
+                ) return 0;
+
+                return Math.ceil(this.pagination.totalItems / this.pagination.rowsPerPage)
+            }
+        },
+        methods: {
+            showAlert() {
+                alert('fim de Jogo');
+            },
+            criarNovoJogo() {
+                var indiceDaCasa = Math.floor(Math.random() * 20),
+                    indiceDeFora = Math.floor(Math.random() * 20);
+
+                this.novoJogo.timeDaCasa.time = this.times[indiceDaCasa];
+                this.novoJogo.timeDaCasa.gols = 0;
+
+                this.novoJogo.timeDeFora.time = this.times[indiceDeFora];
+                this.novoJogo.timeDeFora.gols = 0;
+
+                console.log(this.novoJogo);
+            },
+            fimJogo() {
+                var golsMaracados = parseInt(this.novoJogo.timeDaCasa.gols);
+                var golsSofridos = parseInt(this.novoJogo.timeDeFora.gols);
+                var timeAdversario = this.novoJogo.timeDeFora.time;
+                var timeCasa = this.novoJogo.timeDaCasa.time;
+                timeCasa.fimJogo(timeAdversario, golsMaracados, golsSofridos);
+            }
+        },
+    });
+</script>
+</body>
+</html>
+<!-- One way data binding-->
+
+<!--two way data binding o v-model é
+uma diretiva que vai permitir o two way
+v-model é uma diretiva
+-->
