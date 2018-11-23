@@ -1,1 +1,2 @@
-# tabela-Brasileirao-A-2018_with_VUE.js
+# Tabela-Brasileirão 2018
+Utilizando Vuejs e Vuetify 
