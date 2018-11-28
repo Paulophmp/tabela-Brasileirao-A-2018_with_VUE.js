@@ -77,19 +77,28 @@
                         <v-pagination v-model="pagination.page" :length="pages"></v-pagination>
                     </div>
 
-                    <h3>Times Classificados para a Libertadores</h3>
-                    <ul>
-                        <li v-for="time in timesLibertadores">
-                            <img :src="time.escudo" alt="" class="escudo">
-                        </li>
-                    </ul>
 
-                    <h3>Times Rebaixados</h3>
-                    <ul>
-                        <li v-for="time in timesRebaixados">
-                            <img :src="time.escudo" alt="" class="escudo">
-                        </li>
-                    </ul>
+                    <v-container grid-list-md text-xs-center>
+                        <v-layout row wrap>
+                            <v-flex xs6>
+                                <v-card>
+                                    <v-card-text class="px-0">Times Classificados para a Libertadores</v-card-text>
+                                        <div v-for="time in timesLibertadores">
+                                            <img :src="time.escudo" alt="" class="escudo">
+                                        </div>
+                                </v-card>
+                            </v-flex>
+                            <v-flex xs6>
+                                <v-card>
+                                    <v-card-text class="px-0">Times Rebaixados</v-card-text>
+                                    <div v-for="time in timesRebaixados">
+                                        <img :src="time.escudo" alt="" class="escudo">
+                                    </div>
+                                </v-card>
+                            </v-flex>
+                        </v-layout>
+                    </v-container>
+
                 </div>
             </v-container>
         </v-content>
