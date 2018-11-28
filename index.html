@@ -76,6 +76,20 @@
                     <div class="text-xs-center pt-2">
                         <v-pagination v-model="pagination.page" :length="pages"></v-pagination>
                     </div>
+
+                    <h3>Times Classificados para a Libertadores</h3>
+                    <ul>
+                        <li v-for="time in timesLibertadores">
+                            <img :src="time.escudo" alt="" class="escudo">
+                        </li>
+                    </ul>
+
+                    <h3>Times Rebaixados</h3>
+                    <ul>
+                        <li v-for="time in timesRebaixados">
+                            <img :src="time.escudo" alt="" class="escudo">
+                        </li>
+                    </ul>
                 </div>
             </v-container>
         </v-content>
@@ -197,6 +211,12 @@
                 ) return 0;
 
                 return Math.ceil(this.pagination.totalItems / this.pagination.rowsPerPage)
+            },
+            timesLibertadores() {
+                return this.times.slice(0, 6);
+            },
+            timesRebaixados() {
+                return this.times.slice(16, 20);
             }
         },
         methods: {
@@ -232,7 +252,7 @@
                 return time.golsMarcados - time.golsSofridos;
             },
             ucWords(valor) {
-                return valor.charAt(0).toUpperCase() + valor.slice(1);
+                return valor.charAt(0).toUpperCase() + valor.slice(1);// deixa a primeira letra em maiusculo
             }
         },
     });
