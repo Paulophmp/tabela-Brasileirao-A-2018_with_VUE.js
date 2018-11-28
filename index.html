@@ -63,14 +63,14 @@
                             <td class="text-xs-center">
                                 <v-tooltip right>
                                     <img :src="props.item.escudo" slot="activator" class="escudo">
-                                    <span>{{ props.item.nome }}</span>
+                                    <span>{{ props.item.nome | ucWords }}</span>
                                 </v-tooltip>
                             </td>
 
                             <td class="text-xs-center">{{ props.item.pontos }}</td>
                             <td class="text-xs-center">{{ props.item.golsMarcados }}</td>
                             <td class="text-xs-center">{{ props.item.golsSofridos }}</td>
-                            <td class="text-xs-center">{{ }}</td>
+                            <td class="text-xs-center">{{ props.item | saldo }}</td>
                         </template>
                     </v-data-table>
                     <div class="text-xs-center pt-2">
@@ -91,8 +91,8 @@
             this.escudo = escudo;
 
             this.pontos = 0,
-                this.golsMarcados = 0,
-                this.golsSofridos = 0
+            this.golsMarcados = 0,
+            this.golsSofridos = 0
         }
 
         fimJogo(timeVisitante, golsMarcados, golsSofridos) {
@@ -146,25 +146,25 @@
                 selected: [],
                 times: [
                     new Time('palmeiras', 'assets/palmeiras_60x60.png'),
-                    new Time('Internacional', 'assets/internacional_60x60.png'),
-                    new Time('Flamengo', 'assets/flamengo_60x60.png'),
-                    new Time('Atlético-MG', 'assets/atletico_mg_60x60.png'),
-                    new Time('Santos', 'assets/santos_60x60.png'),
-                    new Time('Botafogo', 'assets/botafogo_60x60.png'),
-                    new Time('Atlético-PR', 'assets/atletico-pr_60x60.png'),
-                    new Time('Corinthians', 'assets/corinthians_60x60.png'),
-                    new Time('Grêmio', 'assets/gremio_60x60.png'),
-                    new Time('Fluminense', 'assets/fluminense_60x60.png'),
-                    new Time('Bahia', 'assets/bahia_60x60.png'),
-                    new Time('Chapecoense', 'assets/chapecoense_60x60.png'),
-                    new Time('São Paulo', 'assets/sao_paulo_60x60.png'),
-                    new Time('Cruzeiro', 'assets/cruzeiro_60x60.png'),
-                    new Time('Sport', 'assets/sport_60x60.png'),
-                    new Time('Ceará', 'assets/ceara_60x60.png'),
-                    new Time('Vitória', 'assets/vitoria_60x60.png'),
-                    new Time('Vasco', 'assets/vasco_60x60.png'),
-                    new Time('América-MG', 'assets/america_mg_60x60.png'),
-                    new Time('Paraná', 'assets/parana_60x60.png'),
+                    new Time('internacional', 'assets/internacional_60x60.png'),
+                    new Time('flamengo', 'assets/flamengo_60x60.png'),
+                    new Time('atlético-MG', 'assets/atletico_mg_60x60.png'),
+                    new Time('santos', 'assets/santos_60x60.png'),
+                    new Time('botafogo', 'assets/botafogo_60x60.png'),
+                    new Time('atlético-PR', 'assets/atletico-pr_60x60.png'),
+                    new Time('corinthians', 'assets/corinthians_60x60.png'),
+                    new Time('grêmio', 'assets/gremio_60x60.png'),
+                    new Time('fluminense', 'assets/fluminense_60x60.png'),
+                    new Time('bahia', 'assets/bahia_60x60.png'),
+                    new Time('chapecoense', 'assets/chapecoense_60x60.png'),
+                    new Time('são Paulo', 'assets/sao_paulo_60x60.png'),
+                    new Time('cruzeiro', 'assets/cruzeiro_60x60.png'),
+                    new Time('sport', 'assets/sport_60x60.png'),
+                    new Time('ceará', 'assets/ceara_60x60.png'),
+                    new Time('vitória', 'assets/vitoria_60x60.png'),
+                    new Time('vasco', 'assets/vasco_60x60.png'),
+                    new Time('américa-MG', 'assets/america_mg_60x60.png'),
+                    new Time('paraná', 'assets/parana_60x60.png'),
                 ],
                 novoJogo: {
                     timeDaCasa: {
@@ -224,6 +224,15 @@
                 timeCasa.fimJogo(timeAdversario, golsMaracados, golsSofridos);
 
                 this.visao = 'tabela';
+            }
+        },
+        filters: {
+            saldo(time) {
+                console.log(time.golsMarcados - time.golsSofridos);
+                return time.golsMarcados - time.golsSofridos;
+            },
+            ucWords(valor) {
+                return valor.charAt(0).toUpperCase() + valor.slice(1);
             }
         },
     });
