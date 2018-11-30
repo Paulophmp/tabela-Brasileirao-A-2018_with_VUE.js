@@ -54,7 +54,7 @@
                 <div v-if="visao === 'tabela'">
                     <v-data-table
                             :headers="headers"
-                            :items="times"
+                            :items="timesOrdenados"
                             :search="search"
                             :pagination.sync="pagination"
                             class="elevation-1"
@@ -106,6 +106,7 @@
 </div>
 <!-- development version, includes helpful console warnings -->
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src='https://cdn.jsdelivr.net/npm/lodash@4.17.11/lodash.min.js'></script>
 <script src="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.js"></script>
 <script>
     class Time {
@@ -167,6 +168,7 @@
                 search: '',
                 pagination: {},
                 selected: [],
+                sort: 'desc',
                 times: [
                     new Time('palmeiras', 'assets/palmeiras_60x60.png'),
                     new Time('internacional', 'assets/internacional_60x60.png'),
@@ -178,7 +180,7 @@
                     new Time('corinthians', 'assets/corinthians_60x60.png'),
                     new Time('grêmio', 'assets/gremio_60x60.png'),
                     new Time('fluminense', 'assets/fluminense_60x60.png'),
-                    new Time('bahia', 'assets/bahia_60x60.png'),
+                    // new Time('bahia', 'assets/bahia_60x60.png'),
                     new Time('chapecoense', 'assets/chapecoense_60x60.png'),
                     new Time('são Paulo', 'assets/sao_paulo_60x60.png'),
                     new Time('cruzeiro', 'assets/cruzeiro_60x60.png'),
@@ -202,13 +204,29 @@
                 headers: [
                     {
                         text: 'TIMES',
-                        align: 'left',
+                        align: 'center',
                         value: 'name'
                     },
-                    { text: 'Pontos', value: 'calories', align: 'center' },
-                    { text: 'GM', value: 'fat', align: 'center' },
-                    { text: 'GS', value: 'carbs', align: 'center' },
-                    { text: 'Saldo', value: 'protein', align: 'center' },
+                    {
+                        text: 'Pontos',
+                        value: 'calories',
+                        align: 'center'
+                    },
+                    {
+                        text: 'GM',
+                        value: 'fat',
+                        align: 'center'
+                    },
+                    {
+                        text: 'GS',
+                        value: 'carbs',
+                        align: 'center'
+                    },
+                    {
+                        text: 'Saldo',
+                        value: 'protein',
+                        align: 'center'
+                    },
                 ],
                 visao: 'tabela',
             }
@@ -219,14 +237,17 @@
                     this.pagination.totalItems == null
                 ) return 0;
 
-                return Math.ceil(this.pagination.totalItems / this.pagination.rowsPerPage)
+                return Math.ceil(this.pagination.totalItems / this.pagination.rowsPerPage);
             },
             timesLibertadores() {
                 return this.times.slice(0, 6);
             },
             timesRebaixados() {
                 return this.times.slice(16, 20);
-            }
+            },
+            timesOrdenados() {
+                return _.orderBy(this.times, 'pontos', this.sort);
+            },
         },
         methods: {
             showAlert() {
