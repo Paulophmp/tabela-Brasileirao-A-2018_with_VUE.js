@@ -83,9 +83,9 @@
                             <v-flex xs6>
                                 <v-card>
                                     <v-card-text class="px-0">Times Classificados para a Libertadores</v-card-text>
-                                        <div v-for="time in timesLibertadores">
-                                            <img :src="time.escudo" alt="" class="escudo">
-                                        </div>
+                                    <div v-for="time in timesLibertadores">
+                                        <img :src="time.escudo" alt="" class="escudo">
+                                    </div>
                                 </v-card>
                             </v-flex>
                             <v-flex xs6>
@@ -115,8 +115,8 @@
             this.escudo = escudo;
 
             this.pontos = 0,
-            this.golsMarcados = 0,
-            this.golsSofridos = 0
+                this.golsMarcados = 0,
+                this.golsSofridos = 0
         }
 
         fimJogo(timeVisitante, golsMarcados, golsSofridos) {
@@ -203,7 +203,7 @@
                 },
                 headers: [
                     {
-                        text: 'TIMES',
+                        text: 'Times',
                         align: 'center',
                         value: 'name'
                     },
