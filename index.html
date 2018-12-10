@@ -52,32 +52,46 @@
                 </v-layout>
 
                 <div v-if="visao === 'tabela'">
-                    <v-data-table
-                            :headers="headers"
-                            :items="timesOrdenados"
-                            :search="search"
-                            :pagination.sync="pagination"
-                            class="elevation-1"
-                    >
-                        <template slot="items" slot-scope="props">
-                            <td class="text-xs-center">
-                                <v-tooltip right>
-                                    <img :src="props.item.escudo" slot="activator" class="escudo">
-                                    <span>{{ props.item.nome | ucWords }}</span>
-                                </v-tooltip>
-                            </td>
+                    <v-content>
+                        <v-container>
+                            <v-card>
+                                <div v-if="visao === 'tabela'">
+                                    <v-card-title>
+                                        <v-spacer></v-spacer>
+                                        <v-text-field
+                                                v-model="search"
+                                                append-icon="search"
+                                                label="Search"
+                                                single-line
+                                                hide-details
+                                        ></v-text-field>
+                                    </v-card-title>
+                                    <v-data-table
+                                            :headers="headers"
+                                            :items="timesOrdenados"
+                                            :search="search"
+                                    >
+                                        <template slot="items" slot-scope="props">
+                                            <td class="text-xs-center">
+                                                <v-tooltip right>
+                                                    <img :src="props.item.escudo" slot="activator" class="escudo">
+                                                    <span>{{ props.item.nome | ucWords }}</span>
+                                                </v-tooltip>
+                                            </td>
 
-                            <td class="text-xs-center">{{ props.item.pontos }}</td>
-                            <td class="text-xs-center">{{ props.item.golsMarcados }}</td>
-                            <td class="text-xs-center">{{ props.item.golsSofridos }}</td>
-                            <td class="text-xs-center">{{ props.item | saldo }}</td>
-                        </template>
-                    </v-data-table>
-                    <div class="text-xs-center pt-2">
-                        <v-pagination v-model="pagination.page" :length="pages"></v-pagination>
-                    </div>
-
-
+                                            <td class="text-xs-center">{{ props.item.pontos }}</td>
+                                            <td class="text-xs-center">{{ props.item.golsMarcados }}</td>
+                                            <td class="text-xs-center">{{ props.item.golsSofridos }}</td>
+                                            <td class="text-xs-center">{{ props.item | saldo }}</td>
+                                        </template>
+                                        <v-alert slot="no-results" :value="true" color="error" icon="warning">
+                                            Sua busca por "{{ search }}" não encontrou nenhum resultado.
+                                        </v-alert>
+                                    </v-data-table>
+                                </div>
+                            </v-card>
+                        </v-container>
+                    </v-content>
                     <v-container grid-list-md text-xs-center>
                         <v-layout row wrap>
                             <v-flex xs6>
@@ -98,7 +112,6 @@
                             </v-flex>
                         </v-layout>
                     </v-container>
-
                 </div>
             </v-container>
         </v-content>
@@ -180,7 +193,7 @@
                     new Time('corinthians', 'assets/corinthians_60x60.png'),
                     new Time('grêmio', 'assets/gremio_60x60.png'),
                     new Time('fluminense', 'assets/fluminense_60x60.png'),
-                    // new Time('bahia', 'assets/bahia_60x60.png'),
+                    new Time('bahia', 'assets/bahia_60x60.png'),
                     new Time('chapecoense', 'assets/chapecoense_60x60.png'),
                     new Time('são Paulo', 'assets/sao_paulo_60x60.png'),
                     new Time('cruzeiro', 'assets/cruzeiro_60x60.png'),
@@ -205,11 +218,11 @@
                     {
                         text: 'Times',
                         align: 'center',
-                        value: 'name'
+                        value: 'times'
                     },
                     {
                         text: 'Pontos',
-                        value: 'calories',
+                        value: 'pontos',
                         align: 'center'
                     },
                     {
@@ -240,7 +253,8 @@
                 return Math.ceil(this.pagination.totalItems / this.pagination.rowsPerPage);
             },
             timesLibertadores() {
-                return this.times.slice(0, 6);
+                var timesOrderLibertadores = this.times.slice(0, 6);
+                return timesOrderLibertadores;
             },
             timesRebaixados() {
                 return this.times.slice(16, 20);
