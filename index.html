@@ -168,7 +168,7 @@
                 search: '',
                 pagination: {},
                 selected: [],
-                sort: 'desc',
+                orientacao: 'desc',
                 times: [
                     new Time('palmeiras', 'assets/palmeiras_60x60.png'),
                     new Time('internacional', 'assets/internacional_60x60.png'),
@@ -246,7 +246,7 @@
                 return this.times.slice(16, 20);
             },
             timesOrdenados() {
-                return _.orderBy(this.times, 'pontos', this.sort);
+                return _.orderBy(this.times, 'pontos', this.orientacao);
             },
         },
         methods: {
